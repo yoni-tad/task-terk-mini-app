@@ -22,17 +22,30 @@ exports.addTask = async (req, res) => {
 };
 
 exports.getTask = async (req, res) => {
-  const taskId = req.params.id;
+  const userId = req.params.userId;
+
   try {
-    if (!taskId) {
-      return res.status(404).json({ message: "Task id required" });
+    if (!userId) {
+      return res.status(404).json({ message: "User id required" });
     }
 
-    const taskInfo = await taskModel.findById(taskId);
-    if (!taskInfo) {
-      return res.status(404).json({ message: "Task not found!" });
+    const taskList = await taskModel.find({ userId: userId });
+    if (taskList.length == 0) {
+      return res.status(404).json({ message: "Tasks not found!" });
     }
-    res.json(taskInfo);
+    const tasks = [];
+    for (const task of taskList) {
+      const taskInfo = {
+        id: task._id,
+        title: task.title,
+        category: task.category,
+        completed: task.completed,
+      };
+
+      tasks.push(taskInfo);
+    }
+
+    res.json(tasks);
   } catch (e) {
     console.log(e.message);
     res.status(500).json({ message: "Server error" });
@@ -40,24 +53,21 @@ exports.getTask = async (req, res) => {
 };
 
 exports.updateTask = async (req, res) => {
-  const taskId = req.params.id;
-  const { title, category, completed } = req.body;
+  const { id } = req.params;
+  const { completed } = req.body;
 
   try {
-    if (!taskId) {
-      return res.status(404).json({ message: "Task id required" });
-    }
+    const updateTask = await taskModel.findByIdAndUpdate(
+      id,
+      {
+        completed: completed,
+      },
+      { new: true }
+    );
 
-    const taskInfo = await taskModel.findById(taskId);
-    if (!taskInfo) {
+    if (!updateTask) {
       return res.status(404).json({ message: "Task not found!" });
     }
-
-    const updateTask = await taskModel.findByIdAndUpdate(taskId, {
-      title: title,
-      categoryL: category,
-      completed: completed,
-    });
 
     res.status(200).json({ message: "Task updated" });
   } catch (e) {

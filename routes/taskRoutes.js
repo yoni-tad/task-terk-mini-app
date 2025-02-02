@@ -3,7 +3,7 @@ const { addTask, getTask, updateTask, deleteTask } = require('../controllers/tas
 const taskRoute = express.Router();
 
 taskRoute.post('/addTasks', addTask);
-taskRoute.get('/:id', getTask);
+taskRoute.get('/:userId', getTask);
 taskRoute.put('/:id', updateTask);
 taskRoute.delete('/:id', deleteTask);
 

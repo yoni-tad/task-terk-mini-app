@@ -18,7 +18,7 @@ app.use("/api/task", taskRoute);
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/", (res, req) => {
+app.use("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
