@@ -15,6 +15,7 @@
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "mongoose": "^8.9.6",
+    "node-telegram-bot-api": "^0.66.0",
     "nodemon": "^3.1.9"
   }
 }
